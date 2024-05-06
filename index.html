@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talmud fr</title>
+    <style>
+        /* Style pour centrer les éléments */
+        body {
+            font-family: Arial, sans-serif; /* Changer la police */
+            background-color: #e9e4d4; /* Changer la couleur de fond */
+            text-align: center; /* Centrer les éléments */
+        }
+        
+        #titles-list {
+            list-style-type: none; /* Retirer les puces de la liste */
+            padding: 0; /* Retirer les marges de la liste */
+        }
+
+		#search-bar {
+            margin-bottom: 20px; /* Espace sous la barre de recherche */
+            padding: 10px; /* Espace à l'intérieur de la barre de recherche */
+            border: none; /* Enlever les bordures */
+            border-radius: 5px; /* Ajouter des coins arrondis */
+            background-color: #fff; /* Changer la couleur de fond de la barre de recherche */
+            width: 80%; /* Ajuster la largeur */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Ajouter une légère ombre */
+        }
+
+        #titles-list li {
+            margin-bottom: 25px; /* Ajouter de l'espace entre les titres */
+        }
+
+        #titles-list li a {
+            text-decoration: none; /* Retirer la soulignement */
+			font-size: 20px;
+            color: #333; /* Changer la couleur du texte */
+        }
+
+		.summary {
+            font-size: 14px; /* Changer la taille de police du résumé */
+            color: #666; /* Changer la couleur du résumé */
+        }
+
+    </style>
+</head>
+<body>
+    <h1>Talmud fr</h1>
+    <!-- Barre de recherche -->
+    <input type="text" id="search-bar" onkeyup="searchFunction()" placeholder="Rechercher un traité...">
+    <!-- Titres -->
+    <ul id="titles-list">
+        <li>
+			<a href="page1.html">
+				Brakhot
+				<p class="summary">Mini résumé du titre Brakhot.</p>
+			</a>
+		</li>
+        <li><a href="page2.html">Titre 2</a></li>
+        <li><a href="page3.html">Titre 3</a></li>
+        <li><a href="page4.html">Titre 4</a></li>
+        <li><a href="page5.html">Titre 5</a></li>
+        <li><a href="page6.html">Titre 6</a></li>
+        <li><a href="page7.html">Titre 7</a></li>
+        <li><a href="page8.html">Titre 8</a></li>
+        <li><a href="page9.html">Titre 9</a></li>
+        <li><a href="page10.html">Titre 10</a></li>
+        <li><a href="page11.html">Titre 11</a></li>
+        <li><a href="page12.html">Titre 12</a></li>
+        <li><a href="page13.html">Titre 13</a></li>
+        <li><a href="page14.html">Titre 14</a></li>
+        <li><a href="page15.html">Titre 15</a></li>
+        <li><a href="page16.html">Titre 16</a></li>
+        <li><a href="page17.html">Titre 17</a></li>
+        <li><a href="page18.html">Titre 18</a></li>
+        <li><a href="page19.html">Titre 19</a></li>
+        <li><a href="page20.html">Titre 20</a></li>
+        <li><a href="page21.html">Titre 21</a></li>
+        <li><a href="page22.html">Titre 22</a></li>
+        <li><a href="page23.html">Titre 23</a></li>
+        <li><a href="page24.html">Titre 24</a></li>
+        <li><a href="page25.html">Titre 25</a></li>
+        <li><a href="page26.html">Titre 26</a></li>
+        <li><a href="page27.html">Titre 27</a></li>
+        <li><a href="page28.html">Titre 28</a></li>
+        <li><a href="page29.html">Titre 29</a></li>
+        <li><a href="page30.html">Titre 30</a></li>
+        <li><a href="page31.html">Titre 31</a></li>
+        <li><a href="page32.html">Titre 32</a></li>
+        <li><a href="page33.html">Titre 33</a></li>
+        <li><a href="page34.html">Titre 34</a></li>
+        <li><a href="page35.html">Titre 35</a></li>
+        <li><a href="page36.html">Titre 36</a></li>
+        <li><a href="page37.html">Titre 37</a></li>
+    </ul>
+	
+	<script>
+        function searchFunction() {
+            // Récupère la valeur de la barre de recherche
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById('search-bar');
+            filter = input.value.toUpperCase();
+            ul = document.getElementById('titles-list');
+            li = ul.getElementsByTagName('li');
+
+            // Parcours tous les éléments de la liste et cache ceux qui ne correspondent pas à la recherche
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName('a')[0];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = '';
+                } else {
+                    li[i].style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
