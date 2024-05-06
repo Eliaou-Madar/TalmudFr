@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brakhot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* Changer la police */
+            background-color: #e9e4d4; /* Changer la couleur de fond */
+            text-align: center; /* Centrer les éléments */
+        }
+
+        /* Style pour le conteneur des lignes de texte */
+        #text-container {
+            display: flex;
+            flex-direction: column; /* Afficher les éléments en colonne */
+            align-items: center; /* Centrer les éléments horizontalement */
+            margin-top: 20px; /* Espace entre la barre de recherche et les lignes de texte */
+        }
+
+        .text-box {
+            width: 80%; /* Largeur de chaque boîte de texte */
+            border: 1px solid #ccc; /* Bordure autour des boîtes */
+            margin: 10px 0; /* Espace entre les boîtes */
+            background-color: #fff; /* Couleur de fond des boîtes */
+            overflow: auto; /* Ajout d'une barre de défilement si le contenu dépasse la taille de la boîte */
+            padding: 10px; /* Espace à l'intérieur de la boîte */
+            box-sizing: border-box; /* Inclure la bordure dans la largeur */
+            word-wrap: break-word; /* Saut de ligne automatique en cas de débordement */
+            background-color: #e9e4d4;
+            border-color: #e9e4d4;
+        }
+
+        .text-box.left {
+            text-align: left; /* Aligner le texte à gauche */
+        }
+
+        .text-box.right {
+            text-align: right; /* Aligner le texte à droite */
+        }
+
+        
+    </style>
+</head>
+<body>
+
+    <!-- Conteneur pour les lignes de texte -->
+    <div id="text-container"></div>
+
+    <script>
+        // Fonction pour récupérer le contenu d'un fichier texte depuis une URL
+        function getTextFromURL(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        callback(xhr.responseText);
+                    } else {
+                        console.error('Erreur lors de la récupération du fichier texte:', xhr.statusText);
+                        callback(null);
+                    }
+                }
+            };
+            xhr.open('GET', url, true);
+            xhr.send();
+        }
+
+        // Fonction pour afficher les lignes de texte en alternance
+        async function displayTextLines() {
+            const textContainer = document.getElementById('text-container');
+            const urls = ['https://raw.githubusercontent.com/Eliaou-Madar/PageProfile/main/BrakhotFr.txt', 'https://raw.githubusercontent.com/Eliaou-Madar/PageProfile/main/BrakhotHe.txt']; // Remplacez 'urlfr' et 'urlhe' par les URL de vos fichiers texte
+            let textLines = [];
+
+            // Charger le contenu des deux fichiers texte simultanément
+            await Promise.all(urls.map(url => new Promise((resolve) => {
+                getTextFromURL(url, function(text) {
+                    if (text) {
+                        // Séparer les lignes et ajouter au tableau
+                        textLines.push(text.split('\n'));
+                    }
+                    resolve();
+                });
+            })));
+
+            // Afficher les lignes en alternance
+            const maxLength = Math.max(textLines[0].length, textLines[1].length);
+            for (let i = 0; i < maxLength; i++) {
+                for (let j = 0; j < textLines.length; j++) {
+                    const lineIndex = Math.min(i, textLines[j].length - 1);
+                    if (textLines[j][lineIndex].includes('Daf') && j < textLines.length - 1) {
+                        // Si la ligne contient 'Daf' et qu'il y a une ligne suivante, passer à la prochaine itération
+                        continue;
+                    }
+                    const textBox = document.createElement('div');
+                    textBox.classList.add('text-box');
+                    // Ajout de la classe 'right' pour le texte de l'URL 1 et 'left' pour le texte de l'URL 2
+                    textBox.classList.add(j === 0 ? 'right' : 'left');
+                    textBox.textContent = textLines[j][lineIndex];
+                    textContainer.appendChild(textBox);
+                }
+            }
+        }
+
+        // Appeler la fonction pour afficher les lignes de texte lors du chargement de la page
+        window.onload = displayTextLines;
+
+        // Fonction de recherche
+        function searchFunction() {
+            const searchText = document.getElementById('search-bar').value.toLowerCase();
+            const textContainers = document.querySelectorAll('.text-box');
+            textContainers.forEach(container => {
+                const text = container.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    // Défilement vers l'élément contenant le texte recherché
+                    container.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return; // Arrêter la recherche après avoir trouvé la première occurrence
+                }
+            });
+        }
+    </script>
+</body>
+</html>
