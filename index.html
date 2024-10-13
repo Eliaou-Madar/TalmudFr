@@ -17,38 +17,7 @@
             padding: 0; /* Retirer les marges de la liste */
         }
 
-	h1 {
-            color: #4a4a4a;
-            margin-bottom: 20px;
-        }
 
-	    /* Section de téléchargement */
-        #download-section {
-            margin: 20px 0;
-            padding: 15px;
-        }
-
-        #download-section a {
-            text-decoration: none;
-            color: #fff;
-            font-size: 18px;
-            background-color: ##ccc;
-            padding: 10px 20px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-            display: inline-flex; /* Aligner l'icône et le texte */
-            align-items: center; /* Centrer verticalement */
-        }
-
-        #download-section a:hover {
-            background-color: ##ccc;
-        }
-
-        #download-section img {
-            width: 30px;
-            vertical-align: middle;
-            margin-right: 10px;
-        }
 
 		#search-bar {
             margin-bottom: 20px; /* Espace sous la barre de recherche */
@@ -80,13 +49,6 @@
 <body>
     <h1>Talmud fr</h1>
 
-	<!-- Section de téléchargement -->
-    <div id="download-section">
-        <a href="https://play.google.com/store/apps/details?id=cem.example.untitled1&hl=fr&gl=US&pli=1" target="_blank">
-            <img src="https://play-lh.googleusercontent.com/s4w4LsRHtc8NpqoCwU3Rb3EYpEgxs21tKP0IoUnr9CpfdSal6HpBMoYt5_AWnM5DlDgC=w240-h480-rw" alt="Télécharger l'application">
-            Télécharger l'application
-        </a>
-    </div>
 	
     <!-- Barre de recherche -->
     <input type="text" id="search-bar" onkeyup="searchFunction()" placeholder="Rechercher un traité...">
