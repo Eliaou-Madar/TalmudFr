@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brakhot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif; /* Changer la police */
+            background-color: #e9e4d4; /* Changer la couleur de fond */
+            text-align: center; /* Centrer les éléments */
+            padding-top: 60px; /* Espace pour la barre fixe */
+        }
+
+        /* Styles pour la barre de recherche */
+        #search-container {
+            position: fixed; /* Fixer la position en haut */
+            top: 0; /* Positionner en haut de la page */
+            left: 0;
+            right: 0;
+            background-color: #e9e4d4; /* Couleur de fond pour la barre */
+            padding: 10px; /* Espace à l'intérieur */
+            z-index: 1000; /* Assurer que la barre reste au-dessus du contenu */
+            display: flex; /* Aligner les éléments horizontalement */
+            justify-content: center; /* Centrer les éléments */
+        }
+
+        #search-bar {
+            padding: 10px;
+            width: 400px; /* Ajuste la largeur selon tes préférences */
+            margin-right: 10px; /* Espace entre le champ et le bouton */
+            border: none; /* Enlever la bordure */
+            border-radius: 15px; /* Coins arrondis */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); /* Ombre légère */
+        }
+
+        #search-button,
+        #next-button {
+            padding: 10px 15px; /* Espacement interne */
+            border: none; /* Enlever la bordure */
+            border-radius: 15px; /* Coins arrondis */
+            background-color: #5f5e5d; /* Couleur de fond */
+            color: white; /* Couleur du texte */
+            cursor: pointer; /* Curseur pointer */
+            margin-left: 5px; /* Espace entre les boutons */
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4); /* Ombre légère */
+        }
+
+        #search-button:hover,
+        #next-button:hover {
+            background-color: #4e4d4c; /* Couleur au survol */
+        }
+
+        /* Style pour le conteneur des lignes de texte */
+        #text-container {
+            display: flex;
+            flex-direction: column; /* Afficher les éléments en colonne */
+            align-items: center; /* Centrer les éléments horizontalement */
+            margin-top: 20px; /* Espace entre la barre de recherche et les lignes de texte */
+        }
+
+        .text-box {
+            width: 80%; /* Largeur de chaque boîte de texte */
+            margin: 10px 0; /* Espace entre les boîtes */
+            background-color: #e9e4d4; /* Couleur de fond des boîtes */
+            padding: 10px; /* Espace à l'intérieur de la boîte */
+            box-sizing: border-box; /* Inclure la bordure dans la largeur */
+            word-wrap: break-word; /* Saut de ligne automatique en cas de débordement */
+            border-radius: 10px; /* Coins arrondis pour les boîtes de texte */
+        }
+
+        .text-box.left {
+            text-align: left; /* Aligner le texte à gauche */
+        }
+
+        .text-box.right {
+            text-align: right; /* Aligner le texte à droite */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barre de recherche -->
+    <div id="search-container">
+        <input type="text" id="search-bar" placeholder="Rechercher..." />
+        <button id="search-button">Chercher</button>
+        <button id="next-button">Suivant</button>
+    </div>
+
+    <!-- Conteneur pour les lignes de texte -->
+    <div id="text-container"></div>
+
+    <script>
+        // Fonction pour récupérer le contenu d'un fichier texte depuis une URL
+        function getTextFromURL(url, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        callback(xhr.responseText);
+                    } else {
+                        console.error('Erreur lors de la récupération du fichier texte:', xhr.statusText);
+                        callback(null);
+                    }
+                }
+            };
+            xhr.open('GET', url, true);
+            xhr.send();
+        }
+
+        // Fonction pour afficher les lignes de texte en alternance
+        async function displayTextLines() {
+            const textContainer = document.getElementById('text-container');
+            const urls = [
+                'https://raw.githubusercontent.com/Eliaou-Madar/PageProfile/main/BrakhotFr.txt',
+                'https://raw.githubusercontent.com/Eliaou-Madar/PageProfile/main/BrakhotHe.txt'
+            ]; 
+            let textLines = [];
+
+            // Charger le contenu des deux fichiers texte simultanément
+            await Promise.all(urls.map(url => new Promise((resolve) => {
+                getTextFromURL(url, function(text) {
+                    if (text) {
+                        textLines.push(text.split('\n'));
+                    }
+                    resolve();
+                });
+            })));
+
+            // Afficher les lignes en alternance
+            const maxLength = Math.max(textLines[0].length, textLines[1].length);
+            for (let i = 0; i < maxLength; i++) {
+                for (let j = 0; j < textLines.length; j++) {
+                    const lineIndex = Math.min(i, textLines[j].length - 1);
+                    if (textLines[j][lineIndex].includes('Daf') && j < textLines.length - 1) {
+                        continue;
+                    }
+                    const textBox = document.createElement('div');
+                    textBox.classList.add('text-box');
+                    textBox.classList.add(j === 0 ? 'right' : 'left');
+                    textBox.textContent = textLines[j][lineIndex];
+                    textContainer.appendChild(textBox);
+                }
+            }
+        }
+
+        // Appeler la fonction pour afficher les lignes de texte lors du chargement de la page
+        window.onload = displayTextLines;
+
+        // Variables pour la recherche
+        let currentIndex = -1;
+        const results = [];
+
+        function normalizeText(text) {
+            return text.replace(/[\s-]+/g, '').toLowerCase(); // Normaliser les espaces, tirets et mettre en minuscule
+        }
+
+        document.getElementById('search-button').addEventListener('click', function() {
+            const searchText = normalizeText(document.getElementById('search-bar').value);
+            const textContainers = document.querySelectorAll('.text-box');
+            
+            results.length = 0; // Réinitialiser les résultats
+            currentIndex = -1; // Réinitialiser l'index
+
+            textContainers.forEach(container => {
+                const text = normalizeText(container.textContent);
+                container.style.backgroundColor = ''; // Réinitialiser le fond
+                
+                if (text.includes(searchText)) {
+                    results.push(container);
+                    container.style.backgroundColor = 'yellow'; // Surbrillance
+                }
+            });
+
+            // Faire défiler vers le premier résultat
+            if (results.length > 0) {
+                currentIndex = 0;
+                results[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+
+        document.getElementById('next-button').addEventListener('click', function() {
+            if (results.length > 0) {
+                // Réinitialiser le style de l'élément actuel
+                if (currentIndex !== -1) {
+                    results[currentIndex].style.backgroundColor = 'yellow'; // Garder la surbrillance
+                }
+
+                // Passer à l'élément suivant
+                currentIndex = (currentIndex + 1) % results.length;
+                results[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    </script>
+</body>
+</html>
